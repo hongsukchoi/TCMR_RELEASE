@@ -1,0 +1,9 @@
+.idea/
+data
+__pycache__/
+tcmr-env/
+output/
+*.mp4
+experiments
+results
+.DS_Store
