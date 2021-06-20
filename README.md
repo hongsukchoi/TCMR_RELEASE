@@ -14,6 +14,7 @@ You may need sudo privilege for the installation.
 ```bash
 source scripts/install_pip.sh
 ```
+If you have a problem related to `torchgeometry`, please check [this](https://github.com/mks0601/I2L-MeshNet_RELEASE/issues/6#issuecomment-675152527) out.
 
 ## Quick demo
 - Download the pre-trained demo TCMR and required data by below command and download SMPL layers from [here](https://smpl.is.tue.mpg.de/en) (male&female) and [here](http://smplify.is.tue.mpg.de/) (neutral). Put SMPL layers (pkl files) under `${ROOT}/data/base_data/`.
@@ -64,12 +65,13 @@ python evaluate.py --dataset 3dpw --cfg ./configs/repr_table4_3dpw_model.yaml --
 ### Reproduction (Training)
 
 - Run the training code with a corresponding config file to reproduce the performance in the tables of [our paper](https://arxiv.org/abs/2011.08627).
+- There is a [hard coding](https://github.com/hongsukchoi/TCMR_RELEASE/blob/46462c664f1057fb3c14e2049a377e6bc071d622/lib/dataset/_dataset_3d.py#L92) related to the config file's name. Please use the exact config file to reproduce, instead of changing the content of the default config file.
 ```bash
 # training outputs are saved in `experiments` directory
 # mkdir experiments
 python train.py --cfg ./configs/repr_table4_3dpw_model.yaml --gpu 0 
 ```
-- Evaluate the trained TCMR (either `checkpoint.pth.tar` or `model_best.pth.tar`) on a target dataset.
+- After the training, the checkpoints are saved in `${ROOT}/experiments/{date_of_training}/`. Change the config file's `TRAIN.PRETRAINED` with the checkpoint path (either `checkpoint.pth.tar` or `model_best.pth.tar`) and follow the evaluation command.
 - You may test the motion discriminator introduced in VIBE by uncommenting the codes that have `exclude motion discriminator` notations.
 - We do not release [NeuralAnnot](https://arxiv.org/abs/2011.11232) SMPL annotations of [Human36M](http://vision.imar.ro/human3.6m/description.php) used in our paper yet. Thus the performance in Table 6 may be slightly different with the paper.
 
