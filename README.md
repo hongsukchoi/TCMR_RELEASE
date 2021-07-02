@@ -85,3 +85,6 @@ python train.py --cfg ./configs/repr_table4_3dpw_model.yaml --gpu 0
   year={2021}
 }
 ```
+
+## License
+This project is licensed under the terms of the MIT license.
