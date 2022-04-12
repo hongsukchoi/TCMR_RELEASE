@@ -80,7 +80,7 @@ python train.py --cfg ./configs/repr_table4_3dpw_model.yaml --gpu 0
 ```
 @InProceedings{choi2020beyond,
   title={Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video},
-  author={Choi, Hongsuk and Moon, Gyeongsik and Lee, Kyoung Mu},
+  author={Choi, Hongsuk and Moon, Gyeongsik and Chang, Ju Yong and Lee, Kyoung Mu},
   booktitle = {Conference on Computer Vision and Pattern Recognition (CVPR)}
   year={2021}
 }
