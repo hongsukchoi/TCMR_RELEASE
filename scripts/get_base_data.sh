@@ -2,7 +2,7 @@
 
 mkdir -p data
 cd data
-gdown "https://drive.google.com/uc?id=1CFTNjTy93XcNJnn90aliDegCAe25SWmx"
+gdown "https://drive.google.com/uc?id=1WmSYmDWdMSXyNU6ZcFQVF8ULtR_S9L3b&export=download&confirm=t"
 unzip base_data.zip
 rm base_data.zip
 cd ..

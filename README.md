@@ -3,10 +3,14 @@
 | ------------- | ------------- |
 | ![aa](./asset/son.gif) | ![bb](./asset/teaser.gif) |
 
+
+## News
+- Update 22.06.06: [NeuralAnnot](https://arxiv.org/abs/2011.11232) SMPL annotations of [Human36M](http://vision.imar.ro/human3.6m/description.php) are released!
+
 ## Introduction
 This repository is the official [Pytorch](https://pytorch.org/) implementation of [Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video](https://arxiv.org/abs/2011.08627). 
-The base codes are largely borrowed from [VIBE](https://github.com/mkocabas/VIBE).
 Find more qualitative results [here](https://youtu.be/WB3nTnSQDII).
+The base codes are largely borrowed from [VIBE](https://github.com/mkocabas/VIBE).
 
 ## Installation
 TCMR is tested on Ubuntu 16.04 with Pytorch 1.4 and Python 3.7.10. 
@@ -17,7 +21,7 @@ source scripts/install_pip.sh
 If you have a problem related to `torchgeometry`, please check [this](https://github.com/mks0601/I2L-MeshNet_RELEASE/issues/6#issuecomment-675152527) out.
 
 ## Quick demo
-- Download the pre-trained demo TCMR and required data by below command and download SMPL layers from [here](https://smpl.is.tue.mpg.de/en) (male&female) and [here](http://smplify.is.tue.mpg.de/) (neutral). Put SMPL layers (pkl files) under `${ROOT}/data/base_data/`.
+- Download the pre-trained demo TCMR and required data by below command and download SMPL layers from [here](https://smpl.is.tue.mpg.de) (male&female) and [here](http://smplify.is.tue.mpg.de) (neutral). Put SMPL layers (pkl files) under `${ROOT}/data/base_data/`.
 ```bash
 source scripts/get_base_data.sh
 ```
@@ -38,7 +42,8 @@ See [our paper](https://arxiv.org/abs/2011.08627) for more details.
 
 ## Running TCMR
 
-Download pre-processed data (except InstaVariety dataset) from [here](https://drive.google.com/drive/folders/1oG-vyE77jHUgdTu9tApJuMj8voJ7lklD?usp=sharing).
+Download pre-processed data (except InstaVariety dataset) from [here](https://drive.google.com/drive/folders/1h0FxBGLqsxNvUL0J43WkTxp7WgYIBLy-?usp=sharing).
+Pre-processed InstaVariety is uploaded by VIBE authors [here](https://owncloud.tuebingen.mpg.de/index.php/s/MKLnHtPjwn24y9C).
 You may also download datasets from sources and pre-process yourself. Refer to [this](asset/data.md).
 Put SMPL layers (pkl files) under `${ROOT}/data/base_data/`.
 
@@ -53,7 +58,7 @@ ${ROOT}
 
 ### Evaluation
 
-- Download pre-trained TCMR weights from [here](https://drive.google.com/drive/folders/1a_nv8MfvToutatBvKaIXP7J_7U4BjSu2?usp=sharing).  
+- Download pre-trained TCMR weights from [here](https://drive.google.com/drive/folders/1NxzmKw5QTGtOKgSQetkq66ZO-dbBSzrd?usp=sharing).  
 - Run the evaluation code with a corresponding config file to reproduce the performance in the tables of [our paper](https://arxiv.org/abs/2011.08627).
 ```bash
 # dataset: 3dpw, mpii3d, h36m 
@@ -73,7 +78,6 @@ python train.py --cfg ./configs/repr_table4_3dpw_model.yaml --gpu 0
 ```
 - After the training, the checkpoints are saved in `${ROOT}/experiments/{date_of_training}/`. Change the config file's `TRAIN.PRETRAINED` with the checkpoint path (either `checkpoint.pth.tar` or `model_best.pth.tar`) and follow the evaluation command.
 - You may test the motion discriminator introduced in VIBE by uncommenting the codes that have `exclude motion discriminator` notations.
-- We do not release [NeuralAnnot](https://arxiv.org/abs/2011.11232) SMPL annotations of [Human36M](http://vision.imar.ro/human3.6m/description.php) used in our paper yet. Thus the performance in Table 6 may be slightly different with the paper.
 
 
 ## Reference
@@ -88,3 +92,12 @@ python train.py --cfg ./configs/repr_table4_3dpw_model.yaml --gpu 0
 
 ## License
 This project is licensed under the terms of the MIT license.
+
+### Related Projects
+
+[I2L-MeshNet_RELEASE](https://github.com/mks0601/I2L-MeshNet_RELEASE)  
+[3DCrowdNet_RELEASE](https://github.com/hongsukchoi/3DCrowdNet_RELEASE)  
+[TCMR_RELEASE](https://github.com/hongsukchoi/TCMR_RELEASE)  
+[Hand4Whole_RELEASE](https://github.com/mks0601/Hand4Whole_RELEASE)  
+[HandOccNet](https://github.com/namepllet/HandOccNet)  
+[NeuralAnnot_RELEASE](https://github.com/mks0601/NeuralAnnot_RELEASE)
