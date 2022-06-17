@@ -96,7 +96,7 @@ class Dataset3D(Dataset):
                 elif self.dataset_name == 'mpii3d':
                     db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_scale12_occ_db.pt')
                 elif self.dataset_name == 'h36m':
-                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_occ_nosmpl_db.pt')
+                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_occ_db.pt')
 
             elif self.load_opt == 'repr_table4_h36m_mpii3d_model':
                 if self.dataset_name == '3dpw':
@@ -104,31 +104,31 @@ class Dataset3D(Dataset):
                 elif self.dataset_name == 'mpii3d':
                     db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_scale12_db.pt')
                 elif self.dataset_name == 'h36m':
-                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_nosmpl_db.pt')
+                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_db.pt')
 
             elif self.load_opt == 'repr_table6_3dpw_model':
                 if self.dataset_name == 'mpii3d':
                     db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_scale12_new_occ_db.pt')
                 elif self.dataset_name == 'h36m':
-                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_occ_nosmpl_db.pt')
+                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_occ_db.pt')
 
             elif self.load_opt == 'repr_table6_h36m_model':
                 if self.dataset_name == 'mpii3d':
                     db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_scale1_db.pt')
                 elif self.dataset_name == 'h36m':
-                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_tight_nosmpl_db.pt')
+                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_tight_db.pt')
 
             elif self.load_opt == 'repr_table6_mpii3d_model':
                 if self.dataset_name == 'mpii3d':
                     db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_scale12_db.pt')
                 elif self.dataset_name == 'h36m':
-                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_nosmpl_db.pt')
+                    db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_db.pt')
 
         elif self.set == 'val' and self.dataset_name == 'h36m':
             # if self.load_opt == 'repr_table4_h36m_mpii3d_model':
             #     db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_25fps_tight_db.pt')
             if self.load_opt == 'repr_table6_h36m_model':
-                db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_test_front_25fps_tight_nosmpl_db.pt')
+                db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_test_front_25fps_tight_db.pt')
 
         elif self.set == 'val' and self.dataset_name == 'mpii3d':
             db_file = osp.join(TCMR_DB_DIR, f'{self.dataset_name}_{self.set}_scale12_db.pt')
@@ -196,9 +196,10 @@ class Dataset3D(Dataset):
             else:
                 pose = self.get_sequence(start_index, end_index, self.db['pose'])
                 shape = self.get_sequence(start_index, end_index, self.db['shape'])
-                # SMPL parameters obtained by NeuralAnnot will be released (https://arxiv.org/abs/2011.11232) after publication
-                # w_smpl = torch.ones(self.seqlen).float()
-                w_smpl = torch.zeros(self.seqlen).float()
+                # SMPL parameters obtained by NeuralAnnot is released now! - 06/17/2022
+                w_smpl = torch.ones(self.seqlen).float()
+                if self.load_opt == 'repr_table4_3dpw_model':
+                    w_smpl = torch.zeros(self.seqlen).float()
                 w_3d = torch.ones(self.seqlen).float()
         elif self.dataset_name == 'mpii3d':
             pose = np.zeros((kp_2d.shape[0], 72))
