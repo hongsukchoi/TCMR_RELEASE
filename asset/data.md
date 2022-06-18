@@ -1,4 +1,4 @@
-# Data pre-procseeing
+# Data pre-processing
 
 - The 'pre-processing' indicates to compute and to save image features before training and testing as written in our [paper](https://arxiv.org/abs/2011.08627).
 - The pre-processed data we provide in this [link](https://drive.google.com/drive/folders/1h0FxBGLqsxNvUL0J43WkTxp7WgYIBLy-?usp=sharing) are processed following the VIBE repository's [instruction](https://github.com/mkocabas/VIBE/blob/master/doc/train.md).
