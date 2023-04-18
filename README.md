@@ -14,7 +14,8 @@ Find more qualitative results [here](https://youtu.be/WB3nTnSQDII).
 The base codes are largely borrowed from [VIBE](https://github.com/mkocabas/VIBE).
 
 ## Installation
-TCMR is tested on Ubuntu 16.04 with Pytorch 1.4 and Python 3.7.10. 
+TCMR is tested on Ubuntu 20.04 with Pytorch 1.12 + CUDA 11.3 and Python 3.9. 
+Previously, it was tested on Ubuntu 16.04 with Pytorch 1.4 and Python 3.7.10. 
 You may need sudo privilege for the installation.
 ```bash
 source scripts/install_pip.sh

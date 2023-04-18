@@ -1,9 +1,6 @@
 tqdm==4.28.1
 yacs==0.1.6
-h5py==2.10.0
-numpy==1.17.5
-scipy==1.4.1
-numba==0.47.0
+numpy==1.21.5
 smplx==0.1.13
 gdown==3.6.4
 PyYAML==5.3.1
@@ -13,14 +10,14 @@ trimesh==3.5.25
 pyrender==0.1.36
 progress==1.5
 filterpy==1.4.5
-matplotlib==3.1.3
-tensorflow==1.15.4
-tensorboard==1.15.0
-torchvision==0.5.0
-scikit-image==0.16.2
-scikit-video==1.1.11
-opencv-python==4.1.2.30
-llvmlite==0.32.1
+scipy #==1.4.1
+scikit-image #==0.16.2
+scikit-video #==1.1.11
+opencv-python #==4.1.2.30
+matplotlib
+h5py
+numba
+llvmlite
 git+https://github.com/mattloper/chumpy.git
 git+https://github.com/mkocabas/yolov3-pytorch.git
 git+https://github.com/mkocabas/multi-person-tracker.git
