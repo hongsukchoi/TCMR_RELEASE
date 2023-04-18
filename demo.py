@@ -16,6 +16,7 @@
 
 import os
 import os.path as osp
+import glob
 from lib.core.config import BASE_DATA_DIR
 from lib.models.smpl import SMPL, SMPL_MODEL_DIR
 os.environ['PYOPENGL_PLATFORM'] = 'egl'
@@ -57,19 +58,33 @@ def main(args):
 
     """ Prepare input video (images) """
     video_file = args.vid_file
-    if video_file.startswith('https://www.youtube.com'):
-        print(f"Donwloading YouTube video \'{video_file}\'")
-        video_file = download_youtube_clip(video_file, '/tmp')
-        if video_file is None:
-            exit('Youtube url is not valid!')
-        print(f"YouTube Video has been downloaded to {video_file}...")
+    img_dir = args.img_dir
 
-    if not os.path.isfile(video_file):
-        exit(f"Input video \'{video_file}\' does not exist!")
+    if not os.path.isfile(video_file) and not os.path.isdir(img_dir):
+        exit(f"Input video \'{video_file}\' nor input images \'{img_dir}\' does not exist!")
 
-    output_path = osp.join('./output/demo_output', os.path.basename(video_file).replace('.mp4', ''))
-    Path(output_path).mkdir(parents=True, exist_ok=True)
-    image_folder, num_frames, img_shape = video_to_images(video_file, return_info=True)
+    if os.path.isfile(video_file):
+        if video_file.startswith('https://www.youtube.com'):
+            print(f"Donwloading YouTube video \'{video_file}\'")
+            video_file = download_youtube_clip(video_file, '/tmp')
+            if video_file is None:
+                exit('Youtube url is not valid!')
+            print(f"YouTube Video has been downloaded to {video_file}...")
+
+        output_path = osp.join('./output/demo_output', os.path.basename(video_file).replace('.mp4', ''))
+        vid_name = os.path.basename(video_file)
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        image_folder, num_frames, img_shape = video_to_images(video_file, return_info=True)
+    
+    else:
+        output_path = osp.join('./output/demo_output', os.path.basename(img_dir))
+        vid_name = os.path.basename(img_dir)
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        # image_folder, num_frames, img_shape = video_to_images(video_file, return_info=True)
+        image_folder = img_dir
+        images = glob.glob(img_dir + '/*')
+        num_frames = len(images)
+        img_shape = cv2.imread(images[0]).shape
 
     print(f"Input video number of frames {num_frames}\n")
     orig_height, orig_width = img_shape[:2]
@@ -186,7 +201,6 @@ def main(args):
 
                 batch = batch.to(device)
                 output = model(batch)[0][-1]
-
                 pred_cam.append(output['theta'][:, :3])
                 pred_verts.append(output['verts'])
                 pred_pose.append(output['theta'][:, 3:75])
@@ -201,6 +215,10 @@ def main(args):
 
             del batch
 
+        # # TEMP
+        # pred_cam_t = torch.stack([pred_cam[:, 1], pred_cam[:, 2], 2 * 5000. / (224. * pred_cam[:, 0] + 1e-9)], dim=-1)
+        # print("pred_cam_t: ", pred_cam_t.mean(dim=0))
+
         # ========= Save results to a pickle file ========= #
         pred_cam = pred_cam.cpu().numpy()
         pred_verts = pred_verts.cpu().numpy()
@@ -208,6 +226,7 @@ def main(args):
         pred_betas = pred_betas.cpu().numpy()
         pred_joints3d = pred_joints3d.cpu().numpy()
 
+       
         bboxes[:, 2:] = bboxes[:, 2:] * 1.2
         if args.render_plain:
             pred_cam[:,0], pred_cam[:,1:] = 1, 0  # np.array([[1, 0, 0]])
@@ -219,15 +238,15 @@ def main(args):
         )
 
         output_dict = {
-            'pred_cam': pred_cam,
-            'orig_cam': orig_cam,
-            'verts': pred_verts,
-            'pose': pred_pose,
-            'betas': pred_betas,
-            'joints3d': pred_joints3d,
-            'joints2d': joints2d,
-            'bboxes': bboxes,
-            'frame_ids': frames,
+            'pred_cam': pred_cam,  # scale and 3D xy translation to project on the 224x224 cropped image
+            'orig_cam': orig_cam,  # scale and 3D xy translation to project on the original image
+            'verts': pred_verts,  # 6890 vertices cooordinbates
+            'pose': pred_pose,  # SMPL pose parameters
+            'betas': pred_betas,  # SMPL shape parameters
+            'joints3d': pred_joints3d,  # 49 joints
+            'joints2d': joints2d,  # 49 joints
+            'bboxes': bboxes,  # bounding box in original image space
+            'frame_ids': frames,  # indices of frames
         }
 
         tcmr_results[person_id] = output_dict
@@ -319,20 +338,24 @@ def main(args):
         cv2.destroyAllWindows()
 
     """ Save rendered video """
-    vid_name = os.path.basename(video_file)
-    save_name = f'tcmr_{vid_name.replace(".mp4", "")}_output.mp4'
-    save_path = os.path.join(output_path, save_name)
+    save_output_name = f'tcmr_{vid_name.replace(".mp4", "")}_output.mp4'
+    save_output_path = os.path.join(output_path, save_output_name)
+    save_input_name = f'tcmr_{vid_name.replace(".mp4", "")}_input.mp4'
+    save_input_path = os.path.join(output_path, save_input_name)
 
-    images_to_video(img_folder=output_img_folder, output_vid_file=save_path)
-    images_to_video(img_folder=input_img_folder, output_vid_file=os.path.join(output_path, vid_name))
-    print(f"Saving result video to {os.path.abspath(save_path)}")
+    images_to_video(img_folder=output_img_folder, output_vid_file=save_output_path)
+    images_to_video(img_folder=input_img_folder, output_vid_file=save_input_path)
+    print(f"Saving result video to {os.path.abspath(save_output_path)}")
     shutil.rmtree(output_img_folder)
     shutil.rmtree(input_img_folder)
-    shutil.rmtree(image_folder)
+    if os.path.isfile(video_file):
+        shutil.rmtree(image_folder)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+
+    parser.add_argument('--img_dir', type=str, default='', help='input images path')
 
     parser.add_argument('--vid_file', type=str, default='sample_video.mp4', help='input video path or youtube link')
 
